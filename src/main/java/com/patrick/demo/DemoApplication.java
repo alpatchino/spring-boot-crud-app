@@ -10,6 +10,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * 
  * H2 Console: http://localhost:8080/console
  *
+ * v1.01
+ *
  */
 @SpringBootApplication
 public class DemoApplication {
