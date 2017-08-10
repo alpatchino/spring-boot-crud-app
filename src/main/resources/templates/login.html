@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <title>Login Form</title>
+
 <!--/*/ <th:block th:include="fragments/headerinc :: head"></th:block> /*/-->
 </head>
 <body>
@@ -13,7 +14,14 @@
 		<div th:if="${param.logout}">
 			<label> You have been logged out. </label>
 		</div>
-
+		<div class="jumbotron">
+			<h1>Hello, world!</h1>
+			<p>...</p>
+			<p>
+				<a class="btn btn-primary btn-lg" href="#" role="button">Learn
+					more</a>
+			</p>
+		</div>
 		<form th:action="@{/login}" method="post">
 
 			<table class="table table-striped">
