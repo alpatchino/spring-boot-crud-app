@@ -3,6 +3,8 @@ package com.patrick.demo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+// STS commit
+
 @SpringBootApplication
 public class SpringBootWebApplication {
 
