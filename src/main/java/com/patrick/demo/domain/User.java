@@ -1,12 +1,15 @@
 package com.patrick.demo.domain;
 
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.validation.constraints.NotNull;
+import javax.persistence.OneToMany;
 
 /**
  * Created by patri on 09/08/2017.
@@ -28,6 +31,8 @@ public class User {
     private Date createdOn; 
     private Integer failedLoginAttempts;
     
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "createdBy")
+    private List<Model> models;  
     
 	public Integer getId() {
 		return id;
@@ -95,5 +100,10 @@ public class User {
 	public void setFailedLoginAttempts(Integer failedLoginAttempts) {
 		this.failedLoginAttempts = failedLoginAttempts;
 	}
-
+	public List<Model> getModels() {
+		return models;
+	}
+	public void setModels(List<Model> models) {
+		this.models = models;
+	}
 }

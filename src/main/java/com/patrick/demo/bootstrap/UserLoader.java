@@ -1,6 +1,7 @@
 package com.patrick.demo.bootstrap;
 
 
+import com.patrick.demo.domain.Model;
 import com.patrick.demo.domain.User;
 import com.patrick.demo.repositories.UserRepository;
 import com.patrick.demo.utils.Constants;
@@ -17,7 +18,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserLoader implements ApplicationListener<ContextRefreshedEvent>  {
 
+	//TODO: finish model repo
+	
     private UserRepository userRepository;
+    //private ModelRepository modelRepository;
 
     private Logger log = Logger.getLogger(UserLoader.class);
 
@@ -55,6 +59,14 @@ public class UserLoader implements ApplicationListener<ContextRefreshedEvent>  {
     	userRepository.save(premiumUser);
     	log.info("Saved user - " + premiumUser.getId());
     	
+    	Model premiumUserModel = new Model();
+    	premiumUserModel.setCreatedBy(premiumUser);
+    	premiumUserModel.setDescription("A simple model that adds two inputs");
+    	premiumUserModel.setEndpointUri("/addition");
+    	premiumUserModel.setName("Simple Addition");
+    	premiumUserModel.setStatus(Constants.MODEL_STATUS_OFFLINE);
+    	//modelRepository.save(premiumUserModel);
+    	
     	User freeUser = new User();
     	freeUser.setAccountType(Constants.ACCOUNT_TYPE_FREE);
     	freeUser.setApiKey("abcd-efgh-1234-5678");
@@ -67,6 +79,13 @@ public class UserLoader implements ApplicationListener<ContextRefreshedEvent>  {
     	freeUser.setPassword("password");
     	userRepository.save(freeUser);
     	log.info("Saved user - " + freeUser.getId());
+    	
+    	Model freeUserModel = new Model();
+    	freeUserModel.setCreatedBy(premiumUser);
+    	freeUserModel.setDescription("A simple model that adds two inputs");
+    	freeUserModel.setEndpointUri("/addition");
+    	freeUserModel.setName("Simple Addition");
+    	freeUserModel.setStatus(Constants.MODEL_STATUS_ONLINE);
     	
     }
 }
