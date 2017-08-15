@@ -21,7 +21,7 @@ public class Model {
 	private String status;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="created_by")
+	//@JoinColumn(name="created_by")??
 	private User createdBy;
 
 	public Integer getId() {
