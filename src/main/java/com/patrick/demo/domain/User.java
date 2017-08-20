@@ -1,5 +1,7 @@
 package com.patrick.demo.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import java.util.Date;
 import java.util.List;
 
@@ -32,7 +34,8 @@ public class User {
     private Integer failedLoginAttempts;
     
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "createdBy")
-    private List<Model> models;  
+	@JsonManagedReference  // Stops infinite loop
+    private List<PredictionModel> predictionModels;
     
 	public Integer getId() {
 		return id;
@@ -100,10 +103,10 @@ public class User {
 	public void setFailedLoginAttempts(Integer failedLoginAttempts) {
 		this.failedLoginAttempts = failedLoginAttempts;
 	}
-	public List<Model> getModels() {
-		return models;
+	public List<PredictionModel> getPredictionModels() {
+		return predictionModels;
 	}
-	public void setModels(List<Model> models) {
-		this.models = models;
+	public void setPredictionModels(List<PredictionModel> predictionModels) {
+		this.predictionModels = predictionModels;
 	}
 }

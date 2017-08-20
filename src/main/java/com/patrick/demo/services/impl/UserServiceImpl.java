@@ -37,4 +37,10 @@ public class UserServiceImpl implements UserService {
 		return userRepository.findByApiKey(apiKey);
 	}
 
+	@Override
+	public User saveUser(User user) {
+		return userRepository.save(user);
+	}
+
+
 }

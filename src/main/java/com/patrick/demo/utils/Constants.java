@@ -3,21 +3,39 @@ package com.patrick.demo.utils;
 public interface Constants {
 	
 	/**
-	 * 		Domain constants
-	 */ 
-	
-	// User.java
-	public static String ACCOUNT_TYPE_ADMIN = "Admin";
-	public static String ACCOUNT_TYPE_PREMIUM = "Premium";
-	public static String ACCOUNT_TYPE_FREE = "Free";
-	
-	// Model.java
-	public static String MODEL_TYPE_BINARY_CLASSIFICATION = "Binary Classification";
-	public static String MODEL_TYPE_MULTICLASS_CLASSIFICATION = "Multi-class Classification";
-	public static String MODEL_TYPE_REGRESSIO = "Regression";
-	
-	public static String MODEL_STATUS_OFFLINE = "Offline";
-	public static String MODEL_STATUS_ONLINE = "Online";
-	public static String MODEL_STATUS_LEARNING = "Learning";
+	 *  -- Domain constants - there's probably a better way of doing this™
+	 */
 
+	/**
+	 * User.java
+ 	 */
+	String ACCOUNT_TYPE_ADMIN = "ADMIN";
+	String ACCOUNT_TYPE_PREMIUM = "PREMIUM";
+	String ACCOUNT_TYPE_FREE = "FREE";
+
+	/**
+	 * PredictionModel.java
+ 	 */
+	String MODEL_TYPE_BINARY_CLASSIFICATION = "Binary Classification";
+	String MODEL_TYPE_MULTICLASS_CLASSIFICATION = "Multi-class Classification";
+	String MODEL_TYPE_REGRESSIO = "Regression";
+
+	/**
+	 * PredictiveModel.java
+ 	 */
+	String MODEL_STATUS_OFFLINE = "OFFLINE";
+	String MODEL_STATUS_LEARNING = "LEARNING";
+	String MODEL_STATUS_ONLINE = "ONLINE";
+	String MODEL_STATUS_ERROR = "ERROR";
+
+	/**
+	 * TrainingData.java
+	 */
+    String DATA_TYPE_CSV = ".csv";
+    String DATA_TYPE_TXT = ".txt";
+    String DATA_TYPE_XLS = ".xls";
+    String DATA_TYPE_JSON = ".json";
+
+    String DATA_LOCATION_LOCAL = "LOCAL";
+	String DATA_LOCATION_AWS = "AWS";
 }

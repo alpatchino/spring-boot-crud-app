@@ -12,4 +12,6 @@ public interface UserService {
 	
 	User getUserByApiKey(String apiKey);
 
+	User saveUser(User user);
+
 }
