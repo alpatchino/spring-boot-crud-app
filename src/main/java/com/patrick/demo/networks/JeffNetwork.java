@@ -5,7 +5,10 @@ package com.patrick.demo.networks;
  */
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.patrick.demo.entity.PredictionEntity;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
+import sun.nio.ch.Net;
 
 import java.io.*;
 import java.text.NumberFormat;
@@ -23,7 +26,8 @@ import java.util.Arrays;
  * @version 1.0
  */
 
-public class JeffNetwork {
+@Component
+public class JeffNetwork extends Network {
 
     /**
      * The global error for the training.
@@ -149,6 +153,10 @@ public class JeffNetwork {
         thresholdDelta = new double[neuronCount];
 
         reset();
+    }
+
+    public JeffNetwork() {
+
     }
 
     public static void main(String[] args) {
@@ -350,6 +358,16 @@ public class JeffNetwork {
         }
     }
 
+    @Override
+    public void load() {
+
+    }
+
+    @Override
+    public void construct() {
+
+    }
+
     /**
      * Modify the weight matrix and thresholds based on the last call to
      * calcError.
@@ -372,9 +390,15 @@ public class JeffNetwork {
         }
     }
 
+    @Override
+    public void ask() {
+
+    }
+
     /**
      * Reset the weight matrix and the thresholds.
      */
+    @Override
     public void reset() {
         int i;
 

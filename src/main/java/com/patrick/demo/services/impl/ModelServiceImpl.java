@@ -1,6 +1,6 @@
 package com.patrick.demo.services.impl;
 
-import com.patrick.demo.domain.PredictionModel;
+import com.patrick.demo.entity.PredictionEntity;
 import com.patrick.demo.repositories.ModelRepository;
 import com.patrick.demo.services.ModelService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,22 +20,22 @@ public class ModelServiceImpl implements ModelService {
     }
 
     @Override
-    public Iterable<PredictionModel> listAllModels() {
+    public Iterable<PredictionEntity> listAllModels() {
         return modelRepository.findAll();
     }
 
     @Override
-    public PredictionModel getModelById(Integer id) {
+    public PredictionEntity getModelById(Integer id) {
         return modelRepository.findOne(id);
     }
 
     @Override
-    public PredictionModel saveModel(PredictionModel predictionModel) {
-        return modelRepository.save(predictionModel);
+    public PredictionEntity saveModel(PredictionEntity predictionEntity) {
+        return modelRepository.save(predictionEntity);
     }
 
     @Override
-    public void deleteModel(PredictionModel predictionModel){
-        modelRepository.delete(predictionModel);
+    public void deleteModel(PredictionEntity predictionEntity){
+        modelRepository.delete(predictionEntity);
     }
 }

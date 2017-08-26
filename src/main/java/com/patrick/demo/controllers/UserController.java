@@ -1,7 +1,6 @@
 package com.patrick.demo.controllers;
 
 
-import com.patrick.demo.domain.User;
 import com.patrick.demo.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,8 +8,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
-import java.awt.*;
 
 /**
  * Created by patri on 19/08/2017.

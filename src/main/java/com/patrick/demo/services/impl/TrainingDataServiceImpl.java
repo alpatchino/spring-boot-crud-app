@@ -1,6 +1,6 @@
 package com.patrick.demo.services.impl;
 
-import com.patrick.demo.domain.TrainingData;
+import com.patrick.demo.entity.DataEntity;
 import com.patrick.demo.repositories.TrainingDataRepository;
 import com.patrick.demo.services.TrainingDataService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,17 +20,17 @@ public class TrainingDataServiceImpl implements TrainingDataService {
     }
 
     @Override
-    public Iterable<TrainingData> listAllTrainingData() {
+    public Iterable<DataEntity> listAllTrainingData() {
         return null;
     }
 
     @Override
-    public TrainingData getTrainingDataById(Integer id) {
+    public DataEntity getTrainingDataById(Integer id) {
         return null;
     }
 
     @Override
-    public TrainingData saveTrainingData(TrainingData data) {
+    public DataEntity saveTrainingData(DataEntity data) {
         return null;
     }
 }

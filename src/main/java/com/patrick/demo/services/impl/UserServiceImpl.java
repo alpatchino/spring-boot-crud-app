@@ -3,7 +3,7 @@ package com.patrick.demo.services.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.patrick.demo.domain.User;
+import com.patrick.demo.entity.User;
 import com.patrick.demo.repositories.UserRepository;
 import com.patrick.demo.services.UserService;
 

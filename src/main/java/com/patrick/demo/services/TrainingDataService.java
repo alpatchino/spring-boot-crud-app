@@ -1,15 +1,15 @@
 package com.patrick.demo.services;
 
-import com.patrick.demo.domain.TrainingData;
+import com.patrick.demo.entity.DataEntity;
 
 /**
  * Created by patri on 20/08/2017.
  */
 public interface TrainingDataService {
 
-    Iterable<TrainingData> listAllTrainingData();
+    Iterable<DataEntity> listAllTrainingData();
 
-    TrainingData getTrainingDataById(Integer id);
+    DataEntity getTrainingDataById(Integer id);
 
-    TrainingData saveTrainingData(TrainingData data);
+    DataEntity saveTrainingData(DataEntity data);
 }

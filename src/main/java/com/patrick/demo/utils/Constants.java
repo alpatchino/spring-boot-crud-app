@@ -14,7 +14,7 @@ public interface Constants {
 	String ACCOUNT_TYPE_FREE = "FREE";
 
 	/**
-	 * PredictionModel.java
+	 * PredictionEntity.java
  	 */
 	String MODEL_TYPE_BINARY_CLASSIFICATION = "Binary Classification";
 	String MODEL_TYPE_MULTICLASS_CLASSIFICATION = "Multi-class Classification";
@@ -29,7 +29,7 @@ public interface Constants {
 	String MODEL_STATUS_ERROR = "ERROR";
 
 	/**
-	 * TrainingData.java
+	 * DataEntity.java
 	 */
     String DATA_TYPE_CSV = ".csv";
     String DATA_TYPE_TXT = ".txt";

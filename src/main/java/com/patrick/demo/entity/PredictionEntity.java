@@ -1,11 +1,11 @@
-package com.patrick.demo.domain;
+package com.patrick.demo.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
 
-@Entity
-public class PredictionModel {
+@Entity(name="prediction_main")
+public class PredictionEntity {
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -24,7 +24,7 @@ public class PredictionModel {
 
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name = "training_data_id")
-	private TrainingData data;
+	private DataEntity data;
 
 	public Integer getId() {
 		return id;
@@ -82,11 +82,12 @@ public class PredictionModel {
 		this.modelLocation = modelLocation;
 	}
 
-	public TrainingData getData() {
+	public DataEntity getDataEntity() {
 		return data;
 	}
 
-	public void setData(TrainingData data) {
+	public void setDataEntity(DataEntity data) {
 		this.data = data;
 	}
+
 }

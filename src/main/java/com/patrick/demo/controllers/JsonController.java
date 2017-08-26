@@ -1,8 +1,8 @@
 package com.patrick.demo.controllers;
 
-import com.patrick.demo.domain.PredictionModel;
-import com.patrick.demo.domain.TrainingData;
-import com.patrick.demo.domain.User;
+import com.patrick.demo.entity.DataEntity;
+import com.patrick.demo.entity.PredictionEntity;
+import com.patrick.demo.entity.User;
 import com.patrick.demo.services.ModelService;
 import com.patrick.demo.services.TrainingDataService;
 import com.patrick.demo.services.UserService;
@@ -67,25 +67,25 @@ public class JsonController {
      *
      */
     @RequestMapping(value = "/models", method = RequestMethod.GET)
-    public Iterable<PredictionModel> getAllModels() {
+    public Iterable<PredictionEntity> getAllModels() {
         logger.info("Retrieving all models {}...");
         return modelService.listAllModels();
     }
 
     @RequestMapping(value = "/models/{id}", method = RequestMethod.GET)
-    public PredictionModel getModel(@PathVariable Integer id) {
+    public PredictionEntity getModel(@PathVariable Integer id) {
         logger.info("Retrieving single model {}...", id);
         return modelService.getModelById(id);
     }
 
     @RequestMapping(value = "/models", method = RequestMethod.POST)
-    public PredictionModel createModel(@RequestBody PredictionModel model) {
+    public PredictionEntity createModel(@RequestBody PredictionEntity model) {
         logger.info("Creating new model {}...", model);
         return modelService.saveModel(model);
     }
 
     @RequestMapping(value = "/models/{id}", method = RequestMethod.PUT)
-    public PredictionModel updateModel(@PathVariable Integer id, @RequestBody PredictionModel model){
+    public PredictionEntity updateModel(@PathVariable Integer id, @RequestBody PredictionEntity model){
         logger.info("Updating model {}...", model);
         model.setId(id);
         return modelService.saveModel(model);
@@ -98,19 +98,19 @@ public class JsonController {
      *
      */
     @RequestMapping(value = "/data", method = RequestMethod.GET)
-    public Iterable<TrainingData> getAllTrainingData(){
+    public Iterable<DataEntity> getAllTrainingData(){
         logger.info("Retrieving all training data...");
         return trainingDataService.listAllTrainingData();
     }
 
     @RequestMapping(value = "/data/{id}", method = RequestMethod.GET)
-    public TrainingData getTrainingData(@PathVariable Integer id){
+    public DataEntity getTrainingData(@PathVariable Integer id){
         logger.info("Retrieving training data... {}" + id.toString());
         return trainingDataService.getTrainingDataById(id);
     }
 
     @RequestMapping(value = "/data", method = RequestMethod.POST)
-    public TrainingData createTrainingData(@RequestBody TrainingData data){
+    public DataEntity createTrainingData(@RequestBody DataEntity data){
         logger.info("Creating new training data");
         return trainingDataService.saveTrainingData(data);
     }

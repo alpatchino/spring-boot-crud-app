@@ -1,6 +1,6 @@
 package com.patrick.demo.services.impl;
 
-import com.patrick.demo.domain.Product;
+import com.patrick.demo.entity.Product;
 import com.patrick.demo.repositories.ProductRepository;
 import com.patrick.demo.services.ProductService;
 

@@ -1,4 +1,4 @@
-package com.patrick.demo.domain;
+package com.patrick.demo.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -35,7 +35,7 @@ public class User {
     
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "createdBy")
 	@JsonManagedReference  // Stops infinite loop
-    private List<PredictionModel> predictionModels;
+    private List<PredictionEntity> predictionEntities;
     
 	public Integer getId() {
 		return id;
@@ -103,10 +103,10 @@ public class User {
 	public void setFailedLoginAttempts(Integer failedLoginAttempts) {
 		this.failedLoginAttempts = failedLoginAttempts;
 	}
-	public List<PredictionModel> getPredictionModels() {
-		return predictionModels;
+	public List<PredictionEntity> getPredictionEntities() {
+		return predictionEntities;
 	}
-	public void setPredictionModels(List<PredictionModel> predictionModels) {
-		this.predictionModels = predictionModels;
+	public void setPredictionEntities(List<PredictionEntity> predictionEntities) {
+		this.predictionEntities = predictionEntities;
 	}
 }

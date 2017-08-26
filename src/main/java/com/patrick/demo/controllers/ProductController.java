@@ -1,6 +1,6 @@
 package com.patrick.demo.controllers;
 
-import com.patrick.demo.domain.Product;
+import com.patrick.demo.entity.Product;
 import com.patrick.demo.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

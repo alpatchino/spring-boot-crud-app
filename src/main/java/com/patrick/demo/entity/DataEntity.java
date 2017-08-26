@@ -1,4 +1,6 @@
-package com.patrick.demo.domain;
+package com.patrick.demo.entity;
+
+import org.springframework.stereotype.Component;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,8 +11,9 @@ import javax.persistence.Id;
  * Created by patri on 20/08/2017.
  */
 
-@Entity
-public class TrainingData {
+@Entity(name="data_main")
+@Component
+public class DataEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -71,4 +74,5 @@ public class TrainingData {
     public void setDescription(String description) {
         this.description = description;
     }
+
 }

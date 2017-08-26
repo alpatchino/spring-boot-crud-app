@@ -1,6 +1,6 @@
 package com.patrick.demo.services;
 
-import com.patrick.demo.domain.User;
+import com.patrick.demo.entity.User;
 
 public interface UserService {
 	

@@ -1,7 +1,7 @@
 package com.patrick.demo.bootstrap;
 
 
-import com.patrick.demo.domain.Product;
+import com.patrick.demo.entity.Product;
 import com.patrick.demo.repositories.ProductRepository;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

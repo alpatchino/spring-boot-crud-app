@@ -1,4 +1,4 @@
-package com.patrick.demo.domain;
+package com.patrick.demo.entity;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
