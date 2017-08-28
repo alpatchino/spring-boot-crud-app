@@ -26,7 +26,6 @@ import java.util.Arrays;
  * @version 1.0
  */
 
-@Component
 public class JeffNetwork extends Network {
 
     /**

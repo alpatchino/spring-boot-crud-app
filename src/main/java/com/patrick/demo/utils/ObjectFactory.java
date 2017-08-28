@@ -16,16 +16,6 @@ import javax.xml.crypto.Data;
 @Component
 public class ObjectFactory {
 
-    @Autowired
-    private JeffNetwork jeffNetwork;
-
-    @Autowired
-    private TFNetwork tfNetwork;
-
-    @Autowired
-    private DataEntity dataEntity;
-
-
     public Network createModel(String type) {
 
         if (type == null) {
@@ -33,9 +23,9 @@ public class ObjectFactory {
         }
 
         if (type.equalsIgnoreCase("JEFF")) {
-            return jeffNetwork;
+            return new JeffNetwork();
         } else if (type.equalsIgnoreCase("TENSORFLOW"))
-            return tfNetwork;
+            return new TFNetwork();
 
         return null;
     }
@@ -46,7 +36,7 @@ public class ObjectFactory {
             return null;
 
         if (type.equalsIgnoreCase("LOCAL"))
-            return dataEntity;
+            return new DataEntity();
 
         return null;
     }

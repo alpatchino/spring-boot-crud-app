@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 /**
  * Created by patri on 23/08/2017.
  */
-@Component
 public class TFNetwork extends Network {
 
     @Override

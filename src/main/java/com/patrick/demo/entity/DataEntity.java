@@ -11,7 +11,6 @@ import javax.persistence.Id;
  * Created by patri on 20/08/2017.
  */
 
-@Component
 @Entity(name="data_main")
 public class DataEntity {
 
