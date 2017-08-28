@@ -4,12 +4,14 @@ package com.patrick.demo.bootstrap;
 import com.patrick.demo.entity.PredictionEntity;
 import com.patrick.demo.entity.DataEntity;
 import com.patrick.demo.entity.User;
-import com.patrick.demo.networks.JeffNetwork;
+import com.patrick.demo.networks.Network;
 import com.patrick.demo.repositories.ModelRepository;
-import com.patrick.demo.repositories.TrainingDataRepository;
+import com.patrick.demo.repositories.DataRepository;
 import com.patrick.demo.repositories.UserRepository;
+import com.patrick.demo.services.DataService;
 import com.patrick.demo.utils.Constants;
 
+import java.io.*;
 import java.util.Date;
 
 import com.patrick.demo.utils.ObjectFactory;
@@ -18,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
+
 
 
 @Component
@@ -30,8 +33,9 @@ public class UserLoader implements ApplicationListener<ContextRefreshedEvent>  {
     @Autowired
 	private ModelRepository modelRepository;
     @Autowired
-	private TrainingDataRepository trainingDataRepository;
-
+	private DataRepository dataRepository;
+	@Autowired
+	private DataService dataService;
     @Autowired
 	private ObjectFactory factory;
 
@@ -42,113 +46,257 @@ public class UserLoader implements ApplicationListener<ContextRefreshedEvent>  {
 
     	populateDB();
 
+    	userCreatesANDPredictionAndUsesIt();
+
+	}
+
+	private void userCreatesANDPredictionAndUsesIt(){
 
 
+		// Step 1: User fills form and uploads CSV
+        String csv = "A, B, Output\n" +
+                "0, 0, 0\n" +
+                "0, 1, 0\n" +
+                "1, 0, 0\n" +
+                "1, 1, 1";
+
+        int DATA_COLS = 3;
+        int DATA_ROWS = 5;
+        int INPUT_NODES = 2;
+        int OUTPUT_NODES = 1;
+        String FILE_TYPE = Constants.DATA_TYPE_CSV;
+        String userDescription = "Test case description";
+        String location = Constants.DATA_LOCATION_LOCAL;
+
+
+
+        // Step 2: App creates DataEntity and populates it with form data
+        DataEntity data = factory.createDataObject(location);
+        data.setDescription(userDescription);
+        data.setFiletype(FILE_TYPE);
+        data.setInputNodesCount(INPUT_NODES);
+        data.setOutputNodesCount(OUTPUT_NODES);
+        data.setLocation(Constants.DATA_LOCATION_LOCAL);
+
+
+
+        // Step 3: Save data entity to DB, id will be used as file ID
+        DataEntity returnedData = dataService.saveData(data);
+        Integer id = returnedData.getId();
+
+
+
+        // Step 4: Save CSV file with DataEntity id as file name
+        saveToDisk(csv, "src/main/resources/training-data/" + id.toString() + FILE_TYPE);
+
+        // Step 5: Load CSV data into memory
+		log.info("Loading data object with id " + id.toString());
+		double[][] data_in = getCSVInputDataAs2DArrayMock("AND");
+		double[][] data_out = getCSVOutputDataAs2DArrayMock("AND");
+		String[] header = {"A", "B", "Output"};
+
+
+
+		// Step 5: Basic metadata is extracted from data, data is normalised
+        DataEntity loadedDataEntity = dataService.getDataById(id);
+        int inputNodes = loadedDataEntity.getInputNodesCount();
+        int outputNodes = loadedDataEntity.getOutputNodesCount();
+
+		// Step 6: Network is initialised with extracted data metadata
+        Network nn = factory.createModel("JEFF");
+        nn.load(data_in, data_out);
+        nn.construct(inputNodes, outputNodes);
+
+
+		// Step 4: Network learns data
+        nn.learn();
+
+		// Step 5:
+        double[] input = {1.0, 0.0};
+        double[] output = nn.ask(input);
+
+        System.out.println("Answer is : " + output[0]);
 
 
 
 
 	}
 
-	private void userCreatesPredictionAndUsesIt(){
-    	//TODO:
-	}
+	private void saveToDisk(String str, String path){
+        try {
+            System.out.println("Saving to disk...");
+            FileWriter writer = new FileWriter(path);
+            writer.write(str);
+            writer.close();
 
-	private void populateDB(){
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-		/**
-		 * 	Initialise test users
-		 */
-		User admin = new User();
-		admin.setAccountType(Constants.ACCOUNT_TYPE_ADMIN);
-		admin.setApiKey("0000-1111-abcd-edfg");
-		admin.setCreatedOn(new Date());
-		admin.setLastLogin(new Date());
-		admin.setFailedLoginAttempts(0);
-		admin.setFirstName("Admin");
-		admin.setLastName("Admin");
-		admin.setEmail("admin@admin.com");
-		admin.setUsername("admin");
-		admin.setPassword("password");
-		userRepository.save(admin);
-		log.info("Saved user - " + admin.getId());
+	private double[][] getCSVInputDataAs2DArrayMock(String type){
 
-		User premiumUser = new User();
-		premiumUser.setAccountType(Constants.ACCOUNT_TYPE_PREMIUM);
-		premiumUser.setApiKey("1234-5678-abcd-edfg");
-		premiumUser.setCreatedOn(new Date());
-		premiumUser.setLastLogin(new Date());
-		premiumUser.setFailedLoginAttempts(0);
-		premiumUser.setFirstName("Premium");
-		premiumUser.setLastName("User");
-		premiumUser.setEmail("premium@user.com");
-		premiumUser.setUsername("premiumuser");
-		premiumUser.setPassword("password");
-		userRepository.save(premiumUser);
-		log.info("Saved user - " + premiumUser.getId());
+		double dataAND[][] = {
+                {0.0,0.0},
+                {1.0,0.0},
+                {0.0,1.0},
+                {1.0,1.0}};
 
-		User freeUser = new User();
-		freeUser.setAccountType(Constants.ACCOUNT_TYPE_FREE);
-		freeUser.setApiKey("abcd-efgh-1234-5678");
-		freeUser.setCreatedOn(new Date());
-		freeUser.setLastLogin(new Date());
-		freeUser.setFailedLoginAttempts(0);
-		freeUser.setFirstName("Free");
-		freeUser.setLastName("User");
-		freeUser.setEmail("free@user.com");
-		freeUser.setUsername("freeuser");
-		freeUser.setPassword("password");
-		userRepository.save(freeUser);
-		log.info("Saved user - " + freeUser.getId());
+        double dataOR[][] = {
+                {0.0,0.0},
+                {1.0,0.0},
+                {0.0,1.0},
+                {1.0,1.0}};
+
+        double dataXOR[][] = {
+                {0.0,0.0},
+                {1.0,0.0},
+                {0.0,1.0},
+                {1.0,1.0}};
 
 
-		/**
-		 *  Initialise training data
-		 */
-		DataEntity ANDData = factory.createDataObject("LOCAL");
-		//DataEntity ANDData = new DataEntity();
-		ANDData.setCols(2);
-		ANDData.setRows(4);
-		ANDData.setFiletype(Constants.DATA_TYPE_CSV);
-		ANDData.setLocation(Constants.DATA_LOCATION_LOCAL);
-		ANDData.setDescription("Training data for Logical AND");
-		trainingDataRepository.save(ANDData);
+		if(type.equalsIgnoreCase("1") || type.equalsIgnoreCase("AND"))
+		    return dataAND;
 
-		DataEntity ORData = factory.createDataObject("LOCAL");
-		//DataEntity ORData = new DataEntity();
-		ORData.setCols(2);
-		ORData.setRows(4);
-		ORData.setFiletype(Constants.DATA_TYPE_CSV);
-		ORData.setLocation(Constants.DATA_LOCATION_LOCAL);
-		ORData.setDescription("Training data for Logical OR");
-		trainingDataRepository.save(ORData);
+        if(type.equalsIgnoreCase("2") || type.equalsIgnoreCase("OR"))
+            return dataOR;
 
+		if(type.equalsIgnoreCase("3") || type.equalsIgnoreCase("XOR"))
+		    return dataXOR;
 
-
-		/**
-		 *  Initialise test models
-		 */
-		PredictionEntity ANDModel = new PredictionEntity();
-		ANDModel.setCreatedBy(admin);
-		ANDModel.setDescription("Logical AND of two inputs");
-		ANDModel.setEndpointUri("/and");
-		ANDModel.setName("Logical AND");
-		ANDModel.setStatus(Constants.MODEL_STATUS_OFFLINE);
-		ANDModel.setModelLocation("/models/1.ser");
-		ANDModel.setDataEntity(ANDData);
-		modelRepository.save(ANDModel);
-
-
-		PredictionEntity ORModel = new PredictionEntity();
-		ORModel.setCreatedBy(admin);
-		ORModel.setDescription("Logical OR of two inputs");
-		ORModel.setEndpointUri("/or");
-		ORModel.setName("Logical OR");
-		ORModel.setStatus(Constants.MODEL_STATUS_ONLINE);
-		ORModel.setModelLocation("/models/2.ser");
-		ORModel.setDataEntity(ORData);
-		modelRepository.save(ORModel);
+		return null;
 
 	}
+
+    private double[][] getCSVOutputDataAs2DArrayMock(String type){
+
+        double dataAND[][] = {
+                {0.0},
+                {0.0},
+                {0.0},
+                {1.0}};
+
+        double dataOR[][] = {
+                {0.0},
+                {1.0},
+                {1.0},
+                {1.0}};
+
+        double dataXOR[][] = {
+                {0.0},
+                {1.0},
+                {1.0},
+                {0.0}};
+
+
+        if(type.equalsIgnoreCase("1") || type.equalsIgnoreCase("AND"))
+            return dataAND;
+
+        if(type.equalsIgnoreCase("2") || type.equalsIgnoreCase("OR"))
+            return dataOR;
+
+        if(type.equalsIgnoreCase("3") || type.equalsIgnoreCase("XOR"))
+            return dataXOR;
+
+        return null;
+
+    }
+
+
+	private void populateDB() {
+
+        /**
+         * 	Initialise test users
+         */
+        User admin = new User();
+        admin.setAccountType(Constants.ACCOUNT_TYPE_ADMIN);
+        admin.setApiKey("0000-1111-abcd-edfg");
+        admin.setCreatedOn(new Date());
+        admin.setLastLogin(new Date());
+        admin.setFailedLoginAttempts(0);
+        admin.setFirstName("Admin");
+        admin.setLastName("Admin");
+        admin.setEmail("admin@admin.com");
+        admin.setUsername("admin");
+        admin.setPassword("password");
+        userRepository.save(admin);
+        log.info("Saved user - " + admin.getId());
+
+        User premiumUser = new User();
+        premiumUser.setAccountType(Constants.ACCOUNT_TYPE_PREMIUM);
+        premiumUser.setApiKey("1234-5678-abcd-edfg");
+        premiumUser.setCreatedOn(new Date());
+        premiumUser.setLastLogin(new Date());
+        premiumUser.setFailedLoginAttempts(0);
+        premiumUser.setFirstName("Premium");
+        premiumUser.setLastName("User");
+        premiumUser.setEmail("premium@user.com");
+        premiumUser.setUsername("premiumuser");
+        premiumUser.setPassword("password");
+        userRepository.save(premiumUser);
+        log.info("Saved user - " + premiumUser.getId());
+
+        User freeUser = new User();
+        freeUser.setAccountType(Constants.ACCOUNT_TYPE_FREE);
+        freeUser.setApiKey("abcd-efgh-1234-5678");
+        freeUser.setCreatedOn(new Date());
+        freeUser.setLastLogin(new Date());
+        freeUser.setFailedLoginAttempts(0);
+        freeUser.setFirstName("Free");
+        freeUser.setLastName("User");
+        freeUser.setEmail("free@user.com");
+        freeUser.setUsername("freeuser");
+        freeUser.setPassword("password");
+        userRepository.save(freeUser);
+        log.info("Saved user - " + freeUser.getId());
+
+
+        /**
+         *  Initialise training data
+         */
+        DataEntity ANDData = factory.createDataObject("LOCAL");
+        //DataEntity ANDData = new DataEntity();
+        ANDData.setOutputNodesCount(2);
+        ANDData.setInputNodesCount(4);
+        ANDData.setFiletype(Constants.DATA_TYPE_CSV);
+        ANDData.setLocation(Constants.DATA_LOCATION_LOCAL);
+        ANDData.setDescription("Training data for Logical AND");
+        dataRepository.save(ANDData);
+
+        DataEntity ORData = factory.createDataObject("LOCAL");
+        //DataEntity ORData = new DataEntity();
+        ORData.setOutputNodesCount(2);
+        ORData.setInputNodesCount(4);
+        ORData.setFiletype(Constants.DATA_TYPE_CSV);
+        ORData.setLocation(Constants.DATA_LOCATION_LOCAL);
+        ORData.setDescription("Training data for Logical OR");
+        dataRepository.save(ORData);
+
+
+        /**
+         *  Initialise test models
+         */
+        PredictionEntity ANDModel = new PredictionEntity();
+        ANDModel.setCreatedBy(admin);
+        ANDModel.setDescription("Logical AND of two inputs");
+        ANDModel.setEndpointUri("/and");
+        ANDModel.setName("Logical AND");
+        ANDModel.setStatus(Constants.MODEL_STATUS_OFFLINE);
+        ANDModel.setModelLocation("/models/1.ser");
+        ANDModel.setDataEntity(ANDData);
+        modelRepository.save(ANDModel);
+
+
+        PredictionEntity ORModel = new PredictionEntity();
+        ORModel.setCreatedBy(admin);
+        ORModel.setDescription("Logical OR of two inputs");
+        ORModel.setEndpointUri("/or");
+        ORModel.setName("Logical OR");
+        ORModel.setStatus(Constants.MODEL_STATUS_ONLINE);
+        ORModel.setModelLocation("/models/2.ser");
+        ORModel.setDataEntity(ORData);
+        modelRepository.save(ORModel);
+
+    }
 }
 

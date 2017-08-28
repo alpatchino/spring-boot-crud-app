@@ -8,12 +8,12 @@ public abstract class Network {
     /**
      *  Load learning data into network
      */
-    abstract public void load();
+    abstract public void load(double[][] input, double[][] output);
 
     /**
      *  Configure network nodes to reflect loaded data, ie. input/output nodes
      */
-    abstract public void construct();
+    abstract public void construct(int inputCount, int outputCount);
 
 
     /**
@@ -24,7 +24,7 @@ public abstract class Network {
     /**
      *  Query model
      */
-    abstract public void ask();
+    abstract public double[] ask(double[] input);
 
     /**
      * Resets all network nodes and weights to random values

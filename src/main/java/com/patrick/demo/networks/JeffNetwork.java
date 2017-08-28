@@ -118,42 +118,8 @@ public class JeffNetwork extends Network {
     protected double errorDelta[];
 
 
-    /**
-     * Construct the neural network.
-     *
-     * @param inputCount The number of input neurons.
-     * @param hiddenCount The number of hidden neurons
-     * @param outputCount The number of output neurons
-     * @param learnRate The learning rate to be used when training.
-     * @param momentum The momentum to be used when training.
-     */
-    public JeffNetwork(int inputCount,
-                       int hiddenCount,
-                       int outputCount,
-                       double learnRate,
-                       double momentum) {
-
-        this.learnRate = learnRate;
-        this.momentum = momentum;
-
-        this.inputCount = inputCount;
-        this.hiddenCount = hiddenCount;
-        this.outputCount = outputCount;
-        neuronCount = inputCount + hiddenCount + outputCount;
-        weightCount = (inputCount * hiddenCount) + (hiddenCount * outputCount);
-
-        fire    = new double[neuronCount];
-        matrix   = new double[weightCount];
-        matrixDelta = new double[weightCount];
-        thresholds = new double[neuronCount];
-        errorDelta = new double[neuronCount];
-        error    = new double[neuronCount];
-        accThresholdDelta = new double[neuronCount];
-        accMatrixDelta = new double[weightCount];
-        thresholdDelta = new double[neuronCount];
-
-        reset();
-    }
+    protected double input[][];
+    protected double output[][];
 
     public JeffNetwork() {
 
@@ -161,45 +127,25 @@ public class JeffNetwork extends Network {
 
     public static void main(String[] args) {
 
-        double xorInput[][] =
+       /* double input[][] =
                 {
                         {0.0,0.0},
                         {1.0,0.0},
                         {0.0,1.0},
                         {1.0,1.0}};
 
-        double xorIdeal[][] =
-                { {0.0},{1.0},{1.0},{0.0}};
+        double output[][] =
+                {
+                        {0.0},
+                        {1.0},
+                        {1.0},
+                        {0.0}};
 
         System.out.println("Learn:");
 
         JeffNetwork network = new JeffNetwork(2,6,1,0.7,0.9);
 
-        NumberFormat percentFormat = NumberFormat.getPercentInstance();
-        percentFormat.setMinimumFractionDigits(4);
 
-
-        for (int i=0;i<10000;i++) {
-            for (int j=0;j<xorInput.length;j++) {
-                network.computeOutputs(xorInput[j]);
-                network.calcError(xorIdeal[j]);
-                network.learn();
-            }
-            System.out.println( "Trial #" + i + ",Error:" +
-                    percentFormat .format(network.getError(xorInput.length)) );
-        }
-
-        System.out.println("Recall:");
-
-        for (int i=0;i<xorInput.length;i++) {
-
-            for (int j=0;j<xorInput[0].length;j++) {
-                System.out.print( xorInput[i][j] +":" );
-            }
-
-            double out[] = network.computeOutputs(xorInput[i]);
-            System.out.println("="+out[0]);
-        }
 
         double testInput[] = {1.0,0.0};
 
@@ -229,46 +175,82 @@ public class JeffNetwork extends Network {
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+        }*/
+
+
+    }
+
+    @Override
+    public void load(double[][] input, double[][] output) {
+        this.input = input;
+        this.output = output;
+    }
+
+    @Override
+    public void construct(int inputCount, int outputCount) {
+
+        double learnRate = 0.7;
+        double momentum = 0.9;
+        int hiddenCount = 6;
+
+        this.learnRate = learnRate;
+        this.momentum = momentum;
+
+        this.inputCount = inputCount;
+        this.hiddenCount = hiddenCount;
+        this.outputCount = outputCount;
+        neuronCount = inputCount + hiddenCount + outputCount;
+        weightCount = (inputCount * hiddenCount) + (hiddenCount * outputCount);
+
+        fire    = new double[neuronCount];
+        matrix   = new double[weightCount];
+        matrixDelta = new double[weightCount];
+        thresholds = new double[neuronCount];
+        errorDelta = new double[neuronCount];
+        error    = new double[neuronCount];
+        accThresholdDelta = new double[neuronCount];
+        accMatrixDelta = new double[weightCount];
+        thresholdDelta = new double[neuronCount];
+
+        reset();
+
+    }
+
+
+
+    @Override
+    public void learn(){
+
+        NumberFormat percentFormat = NumberFormat.getPercentInstance();
+        percentFormat.setMinimumFractionDigits(4);
+
+
+        for (int i=0;i<10000;i++) {
+            for (int j=0;j<input.length;j++) {
+                computeOutputs(input[j]);
+                calcError(output[j]);
+                backProp();
+            }
+            System.out.println( "Trial #" + i + ",Error:" +
+                    percentFormat .format(getError(input.length)));
         }
 
+        System.out.println("Recall:");
+
+        for (int i=0;i<input.length;i++) {
+
+            for (int j=0;j<input[0].length;j++) {
+                System.out.print( input[i][j] +":" );
+            }
+
+            double out[] = computeOutputs(input[i]);
+            System.out.println("="+out[0]);
+        }
 
     }
 
-
-
-
-
-    /**
-     * Returns the root mean square error for a complet training set.
-     *
-     * @param len The length of a complete training set.
-     * @return The current error for the neural network.
-     */
-    public double getError(int len) {
-        double err = Math.sqrt(globalError / (len * outputCount));
-        globalError = 0; // clear the accumulator
-        return err;
-
-    }
-
-    /**
-     * The threshold method. You may wish to override this class to provide other
-     * threshold methods.
-     *
-     * @param sum The activation from the neuron.
-     * @return The activation applied to the threshold method.
-     */
-    public double threshold(double sum) {
-        return 1.0 / (1 + Math.exp(-1.0 * sum));
-    }
-
-    /**
-     * Compute the output for a given input to the neural network.
-     *
-     * @param input The input provide to the neural network.
-     * @return The results from the output neurons.
-     */
-    public double[] computeOutputs(double input[]) {
+    @Override
+    public double[] ask(double input[]) {
         int i, j;
         final int hiddenIndex = inputCount;
         final int outIndex = inputCount + hiddenCount;
@@ -304,6 +286,119 @@ public class JeffNetwork extends Network {
         }
 
         return result;
+    }
+
+    /**
+     * Reset the weight matrix and the thresholds.
+     */
+    @Override
+    public void reset() {
+        int i;
+
+        for (i = 0; i < neuronCount; i++) {
+            thresholds[i] = 0.5 - (Math.random());
+            thresholdDelta[i] = 0;
+            accThresholdDelta[i] = 0;
+        }
+        for (i = 0; i < matrix.length; i++) {
+            matrix[i] = 0.5 - (Math.random());
+            matrixDelta[i] = 0;
+            accMatrixDelta[i] = 0;
+        }
+    }
+
+
+    /**
+     * Modify the weight matrix and thresholds based on the last call to
+     * calcError.
+     */
+
+    public void backProp() {
+        int i;
+
+        // process the matrix
+        for (i = 0; i < matrix.length; i++) {
+            matrixDelta[i] = (learnRate * accMatrixDelta[i]) + (momentum * matrixDelta[i]);
+            matrix[i] += matrixDelta[i];
+            accMatrixDelta[i] = 0;
+        }
+
+        // process the thresholds
+        for (i = inputCount; i < neuronCount; i++) {
+            thresholdDelta[i] = learnRate * accThresholdDelta[i] + (momentum * thresholdDelta[i]);
+            thresholds[i] += thresholdDelta[i];
+            accThresholdDelta[i] = 0;
+        }
+    }
+
+    /**
+     * Returns the root mean square error for a complet training set.
+     *
+     * @param len The length of a complete training set.
+     * @return The current error for the neural network.
+     */
+    public double getError(int len) {
+        double err = Math.sqrt(globalError / (len * outputCount));
+        globalError = 0; // clear the accumulator
+        return err;
+
+    }
+
+    /**
+     * The threshold method. You may wish to override this class to provide other
+     * threshold methods.
+     *
+     * @param sum The activation from the neuron.
+     * @return The activation applied to the threshold method.
+     */
+    public double threshold(double sum) {
+        return 1.0 / (1 + Math.exp(-1.0 * sum));
+    }
+
+    /**
+     * Compute the output for a given input to the neural network.
+     *
+     * @param input The input provide to the neural network.
+     * @return The results from the output neurons.
+     */
+    public double[] computeOutputs(double input[]) {
+
+        int i, j;
+        final int hiddenIndex = inputCount;
+        final int outIndex = inputCount + hiddenCount;
+
+        for (i = 0; i < inputCount; i++) {
+            fire[i] = input[i];
+        }
+
+        // first layer
+        int inx = 0;
+
+        for (i = hiddenIndex; i < outIndex; i++) {
+            double sum = thresholds[i];
+
+            for (j = 0; j < inputCount; j++) {
+                sum += fire[j] * matrix[inx++];
+            }
+            fire[i] = threshold(sum);
+        }
+
+        // hidden layer
+
+        double result[] = new double[outputCount];
+
+        for (i = outIndex; i < neuronCount; i++) {
+            double sum = thresholds[i];
+
+            for (j = hiddenIndex; j < outIndex; j++) {
+                sum += fire[j] * matrix[inx++];
+            }
+            fire[i] = threshold(sum);
+            result[i-outIndex] = fire[i];
+        }
+
+        return result;
+
     }
 
 
@@ -355,62 +450,6 @@ public class JeffNetwork extends Network {
                 winx++;
             }
             accThresholdDelta[i] += errorDelta[i];
-        }
-    }
-
-    @Override
-    public void load() {
-
-    }
-
-    @Override
-    public void construct() {
-
-    }
-
-    /**
-     * Modify the weight matrix and thresholds based on the last call to
-     * calcError.
-     */
-    public void learn() {
-        int i;
-
-        // process the matrix
-        for (i = 0; i < matrix.length; i++) {
-            matrixDelta[i] = (learnRate * accMatrixDelta[i]) + (momentum * matrixDelta[i]);
-            matrix[i] += matrixDelta[i];
-            accMatrixDelta[i] = 0;
-        }
-
-        // process the thresholds
-        for (i = inputCount; i < neuronCount; i++) {
-            thresholdDelta[i] = learnRate * accThresholdDelta[i] + (momentum * thresholdDelta[i]);
-            thresholds[i] += thresholdDelta[i];
-            accThresholdDelta[i] = 0;
-        }
-    }
-
-    @Override
-    public void ask() {
-
-    }
-
-    /**
-     * Reset the weight matrix and the thresholds.
-     */
-    @Override
-    public void reset() {
-        int i;
-
-        for (i = 0; i < neuronCount; i++) {
-            thresholds[i] = 0.5 - (Math.random());
-            thresholdDelta[i] = 0;
-            accThresholdDelta[i] = 0;
-        }
-        for (i = 0; i < matrix.length; i++) {
-            matrix[i] = 0.5 - (Math.random());
-            matrixDelta[i] = 0;
-            accMatrixDelta[i] = 0;
         }
     }
 }

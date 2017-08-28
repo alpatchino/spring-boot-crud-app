@@ -9,15 +9,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class TFNetwork extends Network {
 
-    //TODO: extract hyper params
-
     @Override
-    public void load() {
-        //TODO:
+    public void load(double[][] input, double[][] output) {
+
     }
 
     @Override
-    public void construct() {
+    public void construct(int inputCount, int outputCount) {
 
     }
 
@@ -27,12 +25,17 @@ public class TFNetwork extends Network {
     }
 
     @Override
-    public void ask() {
-
+    public double[] ask(double[] input) {
+        return new double[0];
     }
+
 
     @Override
     public void reset() {
 
     }
+
+    //TODO: extract hyper params
+
+
 }

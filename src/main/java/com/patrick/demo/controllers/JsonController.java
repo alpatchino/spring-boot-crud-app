@@ -4,7 +4,7 @@ import com.patrick.demo.entity.DataEntity;
 import com.patrick.demo.entity.PredictionEntity;
 import com.patrick.demo.entity.User;
 import com.patrick.demo.services.ModelService;
-import com.patrick.demo.services.TrainingDataService;
+import com.patrick.demo.services.DataService;
 import com.patrick.demo.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +28,7 @@ public class JsonController {
     @Autowired
     private ModelService modelService;
     @Autowired
-    private TrainingDataService trainingDataService;
+    private DataService dataService;
 
     /**
      *
@@ -98,21 +98,21 @@ public class JsonController {
      *
      */
     @RequestMapping(value = "/data", method = RequestMethod.GET)
-    public Iterable<DataEntity> getAllTrainingData(){
+    public Iterable<DataEntity> getAllData(){
         logger.info("Retrieving all training data...");
-        return trainingDataService.listAllTrainingData();
+        return dataService.listAllData();
     }
 
     @RequestMapping(value = "/data/{id}", method = RequestMethod.GET)
-    public DataEntity getTrainingData(@PathVariable Integer id){
+    public DataEntity getData(@PathVariable Integer id){
         logger.info("Retrieving training data... {}" + id.toString());
-        return trainingDataService.getTrainingDataById(id);
+        return dataService.getDataById(id);
     }
 
     @RequestMapping(value = "/data", method = RequestMethod.POST)
-    public DataEntity createTrainingData(@RequestBody DataEntity data){
+    public DataEntity createData(@RequestBody DataEntity data){
         logger.info("Creating new training data");
-        return trainingDataService.saveTrainingData(data);
+        return dataService.saveData(data);
     }
 
 }

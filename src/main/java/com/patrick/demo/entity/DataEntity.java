@@ -11,16 +11,16 @@ import javax.persistence.Id;
  * Created by patri on 20/08/2017.
  */
 
-@Entity(name="data_main")
 @Component
+@Entity(name="data_main")
 public class DataEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    private int rows;
-    private int cols;
+    private int inputNodesCount;
+    private int outputNodesCount;
 
     private String filetype;
     private String location;
@@ -35,20 +35,20 @@ public class DataEntity {
         this.id = id;
     }
 
-    public int getRows() {
-        return rows;
+    public int getInputNodesCount() {
+        return inputNodesCount;
     }
 
-    public void setRows(int rows) {
-        this.rows = rows;
+    public void setInputNodesCount(int inputNodesCount) {
+        this.inputNodesCount = inputNodesCount;
     }
 
-    public int getCols() {
-        return cols;
+    public int getOutputNodesCount() {
+        return outputNodesCount;
     }
 
-    public void setCols(int cols) {
-        this.cols = cols;
+    public void setOutputNodesCount(int outputNodesCount) {
+        this.outputNodesCount = outputNodesCount;
     }
 
     public String getFiletype() {
