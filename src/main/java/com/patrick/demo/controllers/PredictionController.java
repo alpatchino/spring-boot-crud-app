@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -26,9 +27,12 @@ import java.util.*;
 @RequestMapping(value = "/m", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PredictionController {
 
-    @Autowired private UserService userService;
-    @Autowired private ModelService modelService;
-    @Autowired private FileService fileService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private ModelService modelService;
+    @Autowired
+    private FileService fileService;
 
     public static final Logger logger = LoggerFactory.getLogger(PredictionController.class);
 
@@ -36,12 +40,49 @@ public class PredictionController {
     @RequestMapping(value = "/{id}", method = RequestMethod.POST)
     public PredictionResponse ask(@PathVariable Integer id, @RequestBody PredictionRequest request) {
 
-        String username = request.getUsername();
-        String accessKey = request.getAccessKey();
-
         // Authenticate user
+        authenticate(request.getUsername(), request.getAccessKey());
+
+        // Get PredictionEntity and its related Network from disk
+        PredictionEntity prediction = modelService.getModelById(id);
+        Network nn = fileService.readNetworkFile(prediction.getId());
+
+        // Convert map to primitive double array
+        double[] input = convertInputMapToPrimitiveDouble(request.getInput());
+
+        // Ask network for prediction
+        double[] output = nn.ask(input);
+
+        // Build response
+        PredictionResponse response = new PredictionResponse();
+        response.setDatetime(new Date());
+        response.setOutput(convertPrimitiveDoubleToOutputMap(output));
+
+        return response;
+    }
+
+    @RequestMapping(value = "/{id}/response", method = RequestMethod.GET)
+    public PredictionResponse getSampleResponse(@PathVariable Integer id){
+        //TODO: Populate a typical response
+        return new PredictionResponse();
+
+    }
+
+    @RequestMapping(value = "/{id}/request", method = RequestMethod.GET)
+    public PredictionRequest getSampleRequest(@PathVariable Integer id){
+        //TODO: Populate a typical request
+        return new PredictionRequest();
+    }
+
+    private void authenticate(String username, String accessKey){
+
         try{
+
             User user  = userService.getUserByUsername(username);
+
+            if(user != null){
+                throw new UsernameNotFoundException("Username provided does not match our records");
+            }
 
             if(user.getApiKey().equalsIgnoreCase(accessKey)){
                 logger.info("User {} with key {} has been authenticated", username, accessKey);
@@ -51,33 +92,23 @@ public class PredictionController {
 
         }catch(AccessKeyException ex){
             logger.info("User {} with key {} has could not bee authenticated", username, accessKey);
-            return new PredictionResponse();
         }
+    }
 
+    private double[] convertInputMapToPrimitiveDouble(Map<String, Double> inputMap){
+        Collection<Double> values = inputMap.values();
+        return values.stream().mapToDouble(Double::doubleValue).toArray();
+    }
 
-        //TODO: VERIFY INPUT
-        Map<String, Double> requestInputMap = request.getInput();
-        Integer inputSize = requestInputMap.size();
-
-        Collection<Double> values = requestInputMap.values();
-        double[] input_array = values.stream().mapToDouble(Double::doubleValue).toArray();
-
-        // Get PredictionEntity and its related Network from disk
-        PredictionEntity prediction = modelService.getModelById(id);
-        Network nn = fileService.readNetworkFile(prediction.getId());
-
-        // Ask network for prediction
-        double[] output = nn.ask(input_array);
-
-
-        PredictionResponse response = new PredictionResponse();
-        response.setDatetime(new Date());
+    private Map<String, Double> convertPrimitiveDoubleToOutputMap(double[] output){
 
         Map<String, Double> outputMap = new HashMap<>();
-        outputMap.put("A", output[0]);
-        response.setOutput(outputMap);
 
-        return response;
+        for(int i = 0; i < output.length; i++)
+            outputMap.put(Integer.toString(i), output[i]);
+
+        return outputMap;
+
     }
 
 }
