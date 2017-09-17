@@ -1,7 +1,7 @@
 package com.patrick.demo.services.impl;
 
 import com.patrick.demo.entity.PredictionEntity;
-import com.patrick.demo.repositories.ModelRepository;
+import com.patrick.demo.services.repositories.ModelRepository;
 import com.patrick.demo.services.ModelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,9 +1,11 @@
 package com.patrick.demo.networks;
 
+import java.io.Serializable;
+
 /**
  * Created by patri on 26/08/2017.
  */
-public abstract class Network {
+public abstract class Network implements Serializable {
 
     /**
      *  Load learning data into network

@@ -14,4 +14,6 @@ public interface ModelService {
     PredictionEntity saveModel(PredictionEntity predictionEntity);
 
     void deleteModel(PredictionEntity predictionEntity);
+
+
 }

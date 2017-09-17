@@ -5,13 +5,14 @@ import com.patrick.demo.entity.PredictionEntity;
 import com.patrick.demo.entity.DataEntity;
 import com.patrick.demo.entity.User;
 import com.patrick.demo.networks.Network;
-import com.patrick.demo.repositories.ModelRepository;
-import com.patrick.demo.repositories.DataRepository;
-import com.patrick.demo.repositories.UserRepository;
+import com.patrick.demo.services.repositories.ModelRepository;
+import com.patrick.demo.services.repositories.DataRepository;
+import com.patrick.demo.services.repositories.UserRepository;
 import com.patrick.demo.services.DataService;
+import com.patrick.demo.services.FileService;
+import com.patrick.demo.services.ModelService;
 import com.patrick.demo.utils.Constants;
 
-import java.io.*;
 import java.util.Date;
 
 import com.patrick.demo.utils.ObjectFactory;
@@ -20,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
-
 
 
 @Component
@@ -36,21 +36,50 @@ public class UserLoader implements ApplicationListener<ContextRefreshedEvent>  {
 	private DataRepository dataRepository;
 	@Autowired
 	private DataService dataService;
+	@Autowired
+    private ModelService modelService;
     @Autowired
 	private ObjectFactory factory;
+    @Autowired
+    private FileService fileService;
 
     private Logger log = Logger.getLogger(UserLoader.class);
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
 
-    	populateDB();
+    	//populateDB();
 
     	userCreatesANDPredictionAndUsesIt();
 
 	}
 
+	private void userCreatesANDModelAction(){
+
+        // USER UPLOADS CSV
+
+    }
+
+	private void userUsersANDModel(){}
+
+
+
 	private void userCreatesANDPredictionAndUsesIt(){
+
+	    // Step 0: User must exist in DB
+        User admin = new User();
+        admin.setAccountType(Constants.ACCOUNT_TYPE_ADMIN);
+        admin.setApiKey("0000-1111-abcd-edfg");
+        admin.setCreatedOn(new Date());
+        admin.setLastLogin(new Date());
+        admin.setFailedLoginAttempts(0);
+        admin.setFirstName("Admin");
+        admin.setLastName("Admin");
+        admin.setEmail("admin@admin.com");
+        admin.setUsername("admin");
+        admin.setPassword("password");
+        userRepository.save(admin);
+        log.info("Saved user - " + admin.getId());
 
 
 		// Step 1: User fills form and uploads CSV
@@ -68,26 +97,21 @@ public class UserLoader implements ApplicationListener<ContextRefreshedEvent>  {
         String userDescription = "Test case description";
         String location = Constants.DATA_LOCATION_LOCAL;
 
-
-
         // Step 2: App creates DataEntity and populates it with form data
-        DataEntity data = factory.createDataObject(location);
-        data.setDescription(userDescription);
-        data.setFiletype(FILE_TYPE);
-        data.setInputNodesCount(INPUT_NODES);
-        data.setOutputNodesCount(OUTPUT_NODES);
-        data.setLocation(Constants.DATA_LOCATION_LOCAL);
-
+        DataEntity ANDData = factory.createDataObject(location);
+        ANDData.setDescription(userDescription);
+        ANDData.setFiletype(FILE_TYPE);
+        ANDData.setInputNodesCount(INPUT_NODES);
+        ANDData.setOutputNodesCount(OUTPUT_NODES);
+        ANDData.setLocation(Constants.DATA_LOCATION_LOCAL);
 
 
         // Step 3: Save data entity to DB, id will be used as file ID
-        DataEntity returnedData = dataService.saveData(data);
+        DataEntity returnedData = dataService.saveData(ANDData);
         Integer id = returnedData.getId();
 
-
-
         // Step 4: Save CSV file with DataEntity id as file name
-        saveToDisk(csv, "src/main/resources/training-data/" + id.toString() + FILE_TYPE);
+        //saveToDisk(csv, "src/main/resources/training-data/" + id.toString() + FILE_TYPE);
 
         // Step 5: Load CSV data into memory
 		log.info("Loading data object with id " + id.toString());
@@ -107,32 +131,40 @@ public class UserLoader implements ApplicationListener<ContextRefreshedEvent>  {
         nn.load(data_in, data_out);
         nn.construct(inputNodes, outputNodes);
 
+        // Step: Network info is saved in DB
+        PredictionEntity ANDModel = new PredictionEntity();
+        ANDModel.setCreatedBy(admin);
+        ANDModel.setDescription("Logical AND of two inputs");
+        ANDModel.setEndpointUri("/and");
+        ANDModel.setName("Logical AND");
+        ANDModel.setStatus(Constants.MODEL_STATUS_ONLINE);
+        ANDModel.setModelLocation("/models/1.ser");
+        ANDModel.setDataEntity(ANDData);
+        PredictionEntity returnedPredictionEntity = modelService.saveModel(ANDModel);
+        Integer returnedModelId = returnedPredictionEntity.getId();
+
 
 		// Step 4: Network learns data
         nn.learn();
 
-		// Step 5:
+		// Step 5: Ask network
         double[] input = {1.0, 0.0};
         double[] output = nn.ask(input);
-
         System.out.println("Answer is : " + output[0]);
 
 
+        fileService.saveNetworkFile(returnedModelId, nn);
+        Network fromDiskNN = fileService.readNetworkFile(returnedModelId);
+
+        // Step 5: Ask network read from disk:
+        output = fromDiskNN.ask(input);
+
+        System.out.println("Answer from de-serialised NN is " + output[0]);
 
 
-	}
-
-	private void saveToDisk(String str, String path){
-        try {
-            System.out.println("Saving to disk...");
-            FileWriter writer = new FileWriter(path);
-            writer.write(str);
-            writer.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
+
+
 
 	private double[][] getCSVInputDataAs2DArrayMock(String type){
 
