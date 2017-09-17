@@ -1,4 +1,4 @@
-package com.patrick.demo.repositories;
+package com.patrick.demo.services.repositories;
 
 import com.patrick.demo.entity.PredictionEntity;
 import org.springframework.data.repository.CrudRepository;
