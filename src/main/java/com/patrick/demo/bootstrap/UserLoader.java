@@ -11,11 +11,11 @@ import com.patrick.demo.services.repositories.UserRepository;
 import com.patrick.demo.services.DataService;
 import com.patrick.demo.services.FileService;
 import com.patrick.demo.services.ModelService;
-import com.patrick.demo.utils.Constants;
+import com.patrick.demo.bootstrap.utils.Constants;
 
 import java.util.Date;
 
-import com.patrick.demo.utils.ObjectFactory;
+import com.patrick.demo.bootstrap.utils.ObjectFactory;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;

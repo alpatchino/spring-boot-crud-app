@@ -1,8 +1,6 @@
-package com.patrick.demo.controllers;
+package com.patrick.demo.web;
 
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by patri on 17/09/2017.

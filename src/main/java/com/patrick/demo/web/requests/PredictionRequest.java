@@ -1,4 +1,4 @@
-package com.patrick.demo.controllers.requests;
+package com.patrick.demo.web.requests;
 
 import java.util.Map;
 

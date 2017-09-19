@@ -14,4 +14,8 @@ public interface UserService {
 
 	User saveUser(User user);
 
+	void login(String username, String password);
+
+	User getAuthenticatedUser(String username, String apiKey) throws Exception;
+
 }

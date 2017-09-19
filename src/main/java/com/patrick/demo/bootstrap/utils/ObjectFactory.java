@@ -1,14 +1,10 @@
-package com.patrick.demo.utils;
+package com.patrick.demo.bootstrap.utils;
 
 import com.patrick.demo.entity.DataEntity;
-import com.patrick.demo.entity.PredictionEntity;
 import com.patrick.demo.networks.JeffNetwork;
 import com.patrick.demo.networks.Network;
 import com.patrick.demo.networks.TFNetwork;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import javax.xml.crypto.Data;
 
 /**
  * Created by patri on 26/08/2017.

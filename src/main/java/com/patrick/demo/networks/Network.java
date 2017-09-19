@@ -7,6 +7,8 @@ import java.io.Serializable;
  */
 public abstract class Network implements Serializable {
 
+    String status;
+
     /**
      *  Load learning data into network
      */
@@ -32,4 +34,12 @@ public abstract class Network implements Serializable {
      * Resets all network nodes and weights to random values
      */
     abstract public void reset();
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }

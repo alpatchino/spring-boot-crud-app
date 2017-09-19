@@ -1,4 +1,4 @@
-package com.patrick.demo.controllers.responses;
+package com.patrick.demo.web.responses;
 
 import java.util.Date;
 import java.util.Map;

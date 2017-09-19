@@ -1,9 +1,6 @@
 package com.patrick.demo;
 
-import com.patrick.demo.entity.PredictionEntity;
-import com.patrick.demo.networks.JeffNetwork;
-import com.patrick.demo.utils.ObjectFactory;
-import org.aspectj.lang.annotation.After;
+import com.patrick.demo.bootstrap.utils.ObjectFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

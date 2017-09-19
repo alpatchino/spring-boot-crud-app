@@ -1,7 +1,8 @@
-package com.patrick.demo.controllers;
+package com.patrick.demo.web.controllers;
 
-import com.patrick.demo.controllers.requests.PredictionRequest;
-import com.patrick.demo.controllers.responses.PredictionResponse;
+import com.patrick.demo.bootstrap.utils.Constants;
+import com.patrick.demo.web.requests.PredictionRequest;
+import com.patrick.demo.web.responses.PredictionResponse;
 import com.patrick.demo.entity.PredictionEntity;
 import com.patrick.demo.entity.User;
 import com.patrick.demo.bootstrap.exceptions.AccessKeyException;
@@ -38,7 +39,7 @@ public class PredictionController {
 
 
     @RequestMapping(value = "/{id}", method = RequestMethod.POST)
-    public PredictionResponse ask(@PathVariable Integer id, @RequestBody PredictionRequest request) {
+    public PredictionResponse ask(@PathVariable Integer id, @RequestBody PredictionRequest request) throws Exception {
 
         // Authenticate user
         authenticate(request.getUsername(), request.getAccessKey());
@@ -46,6 +47,9 @@ public class PredictionController {
         // Get PredictionEntity and its related Network from disk
         PredictionEntity prediction = modelService.getModelById(id);
         Network nn = fileService.readNetworkFile(prediction.getId());
+
+        if(nn.getStatus() != Constants.MODEL_STATUS_ONLINE)
+            throw new Exception("Model is not ready to be queried. STATUS is " + nn.getStatus());
 
         // Convert map to primitive double array
         double[] input = convertInputMapToPrimitiveDouble(request.getInput());

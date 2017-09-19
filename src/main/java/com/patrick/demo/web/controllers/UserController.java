@@ -1,4 +1,4 @@
-package com.patrick.demo.controllers;
+package com.patrick.demo.web.controllers;
 
 
 import com.patrick.demo.services.UserService;

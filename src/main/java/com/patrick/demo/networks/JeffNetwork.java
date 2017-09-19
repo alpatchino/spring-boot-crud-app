@@ -5,7 +5,9 @@ package com.patrick.demo.networks;
  */
 
 import com.google.gson.Gson;
+import com.patrick.demo.bootstrap.utils.Constants;
 import com.patrick.demo.entity.PredictionEntity;
+import org.apache.tomcat.util.bcel.Const;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import sun.nio.ch.Net;
@@ -27,6 +29,10 @@ import java.util.Arrays;
  */
 
 public class JeffNetwork extends Network {
+
+
+
+
 
     /**
      * The global error for the training.
@@ -121,6 +127,12 @@ public class JeffNetwork extends Network {
     protected double output[][];
 
     public JeffNetwork() {
+
+        // All networks will instantiate as OFFLINE
+        this.status = Constants.MODEL_STATUS_OFFLINE;
+        //this.status = Constants.MODEL_STATUS_ERROR;
+
+
 
     }
 
@@ -220,6 +232,8 @@ public class JeffNetwork extends Network {
     @Override
     public void learn(){
 
+        this.status = Constants.MODEL_STATUS_LEARNING;
+
         NumberFormat percentFormat = NumberFormat.getPercentInstance();
         percentFormat.setMinimumFractionDigits(4);
 
@@ -246,6 +260,7 @@ public class JeffNetwork extends Network {
             System.out.println("="+out[0]);
         }
 
+        this.status = Constants.MODEL_STATUS_ONLINE;
     }
 
     @Override
@@ -304,6 +319,8 @@ public class JeffNetwork extends Network {
             matrixDelta[i] = 0;
             accMatrixDelta[i] = 0;
         }
+
+        this.status = Constants.MODEL_STATUS_OFFLINE;
     }
 
 

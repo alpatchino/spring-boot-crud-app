@@ -42,5 +42,20 @@ public class UserServiceImpl implements UserService {
 		return userRepository.save(user);
 	}
 
+    @Override
+    public void login(String username, String password) {
+    }
+
+
+    @Override
+	public User getAuthenticatedUser(String username, String apiKey) throws Exception {
+
+		if(username.isEmpty() || apiKey.isEmpty()) throw new Exception("Invalid username and/or API Key");
+		User user = userRepository.findByApiKey(apiKey);
+		if(username != user.getUsername()) throw new Exception("Invalid username and/or API Key");
+		return user;
+
+	}
+
 
 }
