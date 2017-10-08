@@ -22,8 +22,9 @@ public class AuthenticatorServiceImpl implements AuthenticatorService {
     @Autowired
     UserService userService;
 
+    //TODO: username minimum should be higher than this
     private static final int USERNAME_MINIMUM = 5;
-    private static final int ACCESSKEY_MINIMUM = 12;
+    private static final int ACCESSKEY_MINIMUM = 16;
 
     private static final Logger logger = LoggerFactory.getLogger(AuthenticatorServiceImpl.class);
 
@@ -38,7 +39,7 @@ public class AuthenticatorServiceImpl implements AuthenticatorService {
 
                 user  = userService.getUserByUsername(username);
 
-                if(user != null)
+                if(user == null)
                     throw new UsernameNotFoundException("Username provided does not match our records");
 
                 // TODO: a better authentication method
@@ -60,7 +61,7 @@ public class AuthenticatorServiceImpl implements AuthenticatorService {
 
     private boolean isUsernameAndAccessKeyValid(String username, String accessKey){
         checkNotNull(username, accessKey);
-        checkArgument(username.length() > USERNAME_MINIMUM && accessKey.length() > ACCESSKEY_MINIMUM);
+        checkArgument(username.length() >= USERNAME_MINIMUM && accessKey.length() >= ACCESSKEY_MINIMUM);
         return true;
     }
 }

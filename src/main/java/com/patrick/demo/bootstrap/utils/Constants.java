@@ -3,7 +3,7 @@ package com.patrick.demo.bootstrap.utils;
 public interface Constants {
 	
 	/**
-	 *  -- Domain constants - there's probably a better way of doing this™
+	 *  -- TODO: Domain constants - there's probably a better way of doing this™
 	 */
 
 	/**

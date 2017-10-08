@@ -32,7 +32,7 @@ public interface FileService {
      * @param id
      * @param file
      */
-    void saveDataFile(Integer id, File file);
+    void saveDataFile(Integer id, String file);
 
     /**
      * Reads a data file from local storage

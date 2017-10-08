@@ -12,8 +12,8 @@ import java.io.*;
 @Service
 public class FileServiceImpl implements FileService {
 
-    private static final String NETWORK_FILES_FOLDER = "src/main/resources/network_files/";
-    private static final String DATA_FILES_FOLDER = "src/main/resources/data_files/";
+    private static final String NETWORK_FILES_FOLDER = "src/main/resources/local/network_files/";
+    private static final String DATA_FILES_FOLDER = "src/main/resources/local/data_files/";
 
     @Override
     public void saveNNetworkFile(Integer id, NNetwork NNetwork) {
@@ -28,7 +28,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void saveDataFile(Integer id, File file){
+    public void saveDataFile(Integer id, String file){
         String path = DATA_FILES_FOLDER + id.toString();
         saveFile(path, file);
     }

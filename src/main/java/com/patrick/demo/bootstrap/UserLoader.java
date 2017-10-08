@@ -102,13 +102,15 @@ public class UserLoader implements ApplicationListener<ContextRefreshedEvent>  {
 
         // Step 3: Save data entity to DB, id will be used as file ID
         DataEntity returnedData = dataService.saveData(ANDData);
-        Integer id = returnedData.getId();
+
+
 
         // Step 4: Save CSV file with DataEntity id as file name
         //saveToDisk(csv, "src/main/resources/training-data/" + id.toString() + Constants.DATA_TYPE_CSV);
+        fileService.saveDataFile(returnedData.getId(), csv);
 
         // Step 5: Load CSV data into memory
-		log.info("Loading data object with id " + id.toString());
+		log.info("Loading data object with id " + returnedData.toString());
 		double[][] data_in = getCSVInputDataAs2DArrayMock("AND");
 		double[][] data_out = getCSVOutputDataAs2DArrayMock("AND");
 		String[] header = {"A", "B", "Output"};
@@ -116,7 +118,7 @@ public class UserLoader implements ApplicationListener<ContextRefreshedEvent>  {
 
 
 		// Step 5: Basic metadata is extracted from data, data is normalised
-        DataEntity loadedDataEntity = dataService.getDataById(id);
+        DataEntity loadedDataEntity = dataService.getDataById(returnedData.getId());
         int inputNodes = loadedDataEntity.getInputNodesCount();
         int outputNodes = loadedDataEntity.getOutputNodesCount();
 
@@ -146,7 +148,7 @@ public class UserLoader implements ApplicationListener<ContextRefreshedEvent>  {
         double[] output = nn.ask(input);
         System.out.println("Answer is : " + output[0]);
 
-
+        // Save finished NNetwork file
         fileService.saveNNetworkFile(returnedModelId, nn);
         NNetwork fromDiskNN = fileService.readNNetworkFile(returnedModelId);
 

@@ -49,8 +49,10 @@ public class PredictionController {
         PredictionEntity prediction = modelService.getModelById(id);
         NNetwork nn = fileService.readNNetworkFile(prediction.getId());
 
-        if(nn.getStatus() != Constants.MODEL_STATUS_ONLINE)
+        if(!Constants.MODEL_STATUS_ONLINE.equalsIgnoreCase(nn.getStatus())){
             throw new Exception("Model is not ready to be queried. STATUS is " + nn.getStatus());
+        }
+
 
         // Convert map to primitive double array
         double[] input = convertInputMapToPrimitiveDouble(request.getInput());
@@ -81,6 +83,7 @@ public class PredictionController {
 
 
 
+    // TODO: SRP - this should be in a Utils class
     private double[] convertInputMapToPrimitiveDouble(Map<String, Double> inputMap){
         Collection<Double> values = inputMap.values();
         return values.stream().mapToDouble(Double::doubleValue).toArray();

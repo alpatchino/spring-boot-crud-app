@@ -23,7 +23,7 @@ public class PredictionEntity {
 	private User createdBy;
 
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name = "training_data_id")
+	@JoinColumn(name = "data_file_id")
 	private DataEntity data;
 
 	public Integer getId() {
