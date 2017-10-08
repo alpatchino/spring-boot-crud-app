@@ -69,7 +69,7 @@ public class UserLoader implements ApplicationListener<ContextRefreshedEvent>  {
 	    // Step 0: User must exist in DB
         User admin = new User();
         admin.setAccountType(Constants.ACCOUNT_TYPE_ADMIN);
-        admin.setApiKey("0000-1111-abcd-edfg");
+        admin.setAccessKey("0000-1111-abcd-edfg");
         admin.setCreatedOn(new Date());
         admin.setLastLogin(new Date());
         admin.setFailedLoginAttempts(0);
@@ -242,7 +242,7 @@ public class UserLoader implements ApplicationListener<ContextRefreshedEvent>  {
          */
         User admin = new User();
         admin.setAccountType(Constants.ACCOUNT_TYPE_ADMIN);
-        admin.setApiKey("0000-1111-abcd-edfg");
+        admin.setAccessKey("0000-1111-abcd-edfg");
         admin.setCreatedOn(new Date());
         admin.setLastLogin(new Date());
         admin.setFailedLoginAttempts(0);
@@ -256,7 +256,7 @@ public class UserLoader implements ApplicationListener<ContextRefreshedEvent>  {
 
         User premiumUser = new User();
         premiumUser.setAccountType(Constants.ACCOUNT_TYPE_PREMIUM);
-        premiumUser.setApiKey("1234-5678-abcd-edfg");
+        premiumUser.setAccessKey("1234-5678-abcd-edfg");
         premiumUser.setCreatedOn(new Date());
         premiumUser.setLastLogin(new Date());
         premiumUser.setFailedLoginAttempts(0);
@@ -270,7 +270,7 @@ public class UserLoader implements ApplicationListener<ContextRefreshedEvent>  {
 
         User freeUser = new User();
         freeUser.setAccountType(Constants.ACCOUNT_TYPE_FREE);
-        freeUser.setApiKey("abcd-efgh-1234-5678");
+        freeUser.setAccessKey("abcd-efgh-1234-5678");
         freeUser.setCreatedOn(new Date());
         freeUser.setLastLogin(new Date());
         freeUser.setFailedLoginAttempts(0);

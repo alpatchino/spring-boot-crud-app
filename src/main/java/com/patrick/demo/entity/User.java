@@ -26,7 +26,7 @@ public class User {
     private String lastName;
     private String username;
     private String password;
-    private String apiKey;
+    private String accessKey;
     private String email;
     private String accountType;
     private Date lastLogin;
@@ -67,11 +67,11 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public String getApiKey() {
-		return apiKey;
+	public String getAccessKey() {
+		return accessKey;
 	}
-	public void setApiKey(String apiKey) {
-		this.apiKey = apiKey;
+	public void setAccessKey(String accessKey) {
+		this.accessKey = accessKey;
 	}
 	public String getEmail() {
 		return email;

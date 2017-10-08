@@ -329,7 +329,7 @@ public class JeffNetwork extends Network {
      * calcError.
      */
 
-    public void backProp() {
+    private void backProp() {
         int i;
 
         // process the matrix
@@ -353,7 +353,7 @@ public class JeffNetwork extends Network {
      * @param len The length of a complete training set.
      * @return The current error for the neural network.
      */
-    public double getError(int len) {
+    private double getError(int len) {
         double err = Math.sqrt(globalError / (len * outputCount));
         globalError = 0; // clear the accumulator
         return err;
@@ -367,7 +367,7 @@ public class JeffNetwork extends Network {
      * @param sum The activation from the neuron.
      * @return The activation applied to the threshold method.
      */
-    public double threshold(double sum) {
+    private double threshold(double sum) {
         return 1.0 / (1 + Math.exp(-1.0 * sum));
     }
 
@@ -377,7 +377,7 @@ public class JeffNetwork extends Network {
      * @param input The input provide to the neural network.
      * @return The results from the output neurons.
      */
-    public double[] computeOutputs(double input[]) {
+    private double[] computeOutputs(double input[]) {
 
         int i, j;
         final int hiddenIndex = inputCount;

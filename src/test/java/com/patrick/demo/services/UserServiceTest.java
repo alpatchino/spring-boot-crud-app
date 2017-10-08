@@ -29,7 +29,7 @@ public class UserServiceTest {
         apiKey = "0000-1111-abcd-edfg";
         testUser = new User();
         testUser.setAccountType(Constants.ACCOUNT_TYPE_ADMIN);
-        testUser.setApiKey(apiKey);
+        testUser.setAccessKey(apiKey);
         testUser.setCreatedOn(new Date());
         testUser.setLastLogin(new Date());
         testUser.setFailedLoginAttempts(0);
