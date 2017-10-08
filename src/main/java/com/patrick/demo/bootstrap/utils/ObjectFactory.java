@@ -1,9 +1,9 @@
 package com.patrick.demo.bootstrap.utils;
 
 import com.patrick.demo.entity.DataEntity;
-import com.patrick.demo.networks.JeffNetwork;
-import com.patrick.demo.networks.Network;
-import com.patrick.demo.networks.TFNetwork;
+import com.patrick.demo.networks.JeffNNetwork;
+import com.patrick.demo.networks.NNetwork;
+import com.patrick.demo.networks.TFNNetwork;
 import org.springframework.stereotype.Component;
 
 /**
@@ -12,16 +12,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class ObjectFactory {
 
-    public Network createModel(String type) {
+    public NNetwork createModel(String type) {
 
         if (type == null) {
             return null;
         }
 
         if (type.equalsIgnoreCase("JEFF")) {
-            return new JeffNetwork();
+            return new JeffNNetwork();
         } else if (type.equalsIgnoreCase("TENSORFLOW"))
-            return new TFNetwork();
+            return new TFNNetwork();
 
         return null;
     }

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
  * Created by patri on 08/10/2017.
  */
 @RestController
-@RequestMapping(value = "/modela", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/models", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ModelController {
 
     public static final Logger logger = LoggerFactory.getLogger(ModelController.class);

@@ -38,4 +38,6 @@ public interface Constants {
 
     String DATA_LOCATION_LOCAL = "LOCAL";
 	String DATA_LOCATION_AWS = "AWS";
+
+    String PREDICTION_ENDPOINT_PREFIX = "m/";
 }

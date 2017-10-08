@@ -1,6 +1,6 @@
 package com.patrick.demo.services.impl;
 
-import com.patrick.demo.networks.Network;
+import com.patrick.demo.networks.NNetwork;
 import com.patrick.demo.services.FileService;
 import org.springframework.stereotype.Service;
 
@@ -12,17 +12,33 @@ import java.io.*;
 @Service
 public class FileServiceImpl implements FileService {
 
+    private static final String NETWORK_FILES_FOLDER = "src/main/resources/network_files/";
+    private static final String DATA_FILES_FOLDER = "src/main/resources/data_files/";
+
     @Override
-    public void saveNetworkFile(Integer id, Network network) {
-        String path = "src/main/resources/networks/" + id.toString();
-        saveFile(path, network);
+    public void saveNNetworkFile(Integer id, NNetwork NNetwork) {
+        String path = NETWORK_FILES_FOLDER + id.toString();
+        saveFile(path, NNetwork);
     }
 
     @Override
-    public Network readNetworkFile(Integer id) {
-        String path = "src/main/resources/networks/" + id.toString();
-        return (Network) readFile(path);
+    public NNetwork readNNetworkFile(Integer id) {
+        String path = NETWORK_FILES_FOLDER + id.toString();
+        return (NNetwork) readFile(path);
     }
+
+    @Override
+    public void saveDataFile(Integer id, File file){
+        String path = DATA_FILES_FOLDER + id.toString();
+        saveFile(path, file);
+    }
+
+    @Override
+    public File readDataFile(Integer id){
+        String path = DATA_FILES_FOLDER + id.toString();
+        return (File) readFile(path);
+    }
+
 
     private void saveFile(String path, Object obj){
 

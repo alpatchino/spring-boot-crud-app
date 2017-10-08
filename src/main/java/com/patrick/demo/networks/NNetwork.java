@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by patri on 26/08/2017.
  */
-public abstract class Network implements Serializable {
+public abstract class NNetwork implements Serializable {
 
     String status;
 

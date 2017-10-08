@@ -4,21 +4,13 @@ package com.patrick.demo.networks;
  * Created by patri on 20/08/2017.
  */
 
-import com.google.gson.Gson;
 import com.patrick.demo.bootstrap.utils.Constants;
-import com.patrick.demo.entity.PredictionEntity;
-import org.apache.tomcat.util.bcel.Const;
-import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
-import sun.nio.ch.Net;
 
-import java.io.*;
 import java.text.NumberFormat;
-import java.util.Arrays;
 
 /**
- * Neural Network
- * Feedforward Backpropagation Neural Network
+ * Neural NNetwork
+ * Feedforward Backpropagation Neural NNetwork
  * Written in 2002 by Jeff Heaton(http://www.jeffheaton.com)
  *
  * This class is released under the limited GNU public
@@ -28,7 +20,7 @@ import java.util.Arrays;
  * @version 1.0
  */
 
-public class JeffNetwork extends Network {
+public class JeffNNetwork extends NNetwork {
 
 
 
@@ -126,7 +118,7 @@ public class JeffNetwork extends Network {
     protected double input[][];
     protected double output[][];
 
-    public JeffNetwork() {
+    public JeffNNetwork() {
 
         // All networks will instantiate as OFFLINE
         this.status = Constants.MODEL_STATUS_OFFLINE;
@@ -154,7 +146,7 @@ public class JeffNetwork extends Network {
 
         System.out.println("Learn:");
 
-        JeffNetwork network = new JeffNetwork(2,6,1,0.7,0.9);
+        JeffNNetwork network = new JeffNNetwork(2,6,1,0.7,0.9);
 
 
 
@@ -180,7 +172,7 @@ public class JeffNetwork extends Network {
         try {
             BufferedReader br = new BufferedReader(
                     new FileReader("src/main/resources/models/test.json"));
-            JeffNetwork savedNetwork = gson.fromJson(br, JeffNetwork.class);
+            JeffNNetwork savedNetwork = gson.fromJson(br, JeffNNetwork.class);
 
             System.out.println("Test output (from json): " + Arrays.toString(savedNetwork.computeOutputs(testInput)));
 

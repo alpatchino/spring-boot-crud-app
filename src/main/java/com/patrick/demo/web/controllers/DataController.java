@@ -17,8 +17,10 @@ public class DataController {
 
     public static final Logger logger = LoggerFactory.getLogger(DataController.class);
 
+    private final DataService dataService;
+
     @Autowired
-    private DataService dataService;
+    public DataController(DataService dataService) { this.dataService = dataService; }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public Iterable<DataEntity> getAllData(){

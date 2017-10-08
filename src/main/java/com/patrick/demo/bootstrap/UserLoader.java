@@ -4,7 +4,7 @@ package com.patrick.demo.bootstrap;
 import com.patrick.demo.entity.PredictionEntity;
 import com.patrick.demo.entity.DataEntity;
 import com.patrick.demo.entity.User;
-import com.patrick.demo.networks.Network;
+import com.patrick.demo.networks.NNetwork;
 import com.patrick.demo.services.repositories.ModelRepository;
 import com.patrick.demo.services.repositories.DataRepository;
 import com.patrick.demo.services.repositories.UserRepository;
@@ -26,6 +26,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserLoader implements ApplicationListener<ContextRefreshedEvent>  {
 
+    private Logger log = Logger.getLogger(UserLoader.class);
+
 	//TODO: finish model repo
 
 	@Autowired
@@ -43,14 +45,14 @@ public class UserLoader implements ApplicationListener<ContextRefreshedEvent>  {
     @Autowired
     private FileService fileService;
 
-    private Logger log = Logger.getLogger(UserLoader.class);
+
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
 
     	//populateDB();
 
-    	userCreatesANDPredictionAndUsesIt();
+    	userCreatesANDPrediction();
 
 	}
 
@@ -64,7 +66,7 @@ public class UserLoader implements ApplicationListener<ContextRefreshedEvent>  {
 
 
 
-	private void userCreatesANDPredictionAndUsesIt(){
+	private void userCreatesANDPrediction(){
 
 	    // Step 0: User must exist in DB
         User admin = new User();
@@ -89,29 +91,21 @@ public class UserLoader implements ApplicationListener<ContextRefreshedEvent>  {
                 "1, 0, 0\n" +
                 "1, 1, 1";
 
-        int DATA_COLS = 3;
-        int DATA_ROWS = 5;
-        int INPUT_NODES = 2;
-        int OUTPUT_NODES = 1;
-        String FILE_TYPE = Constants.DATA_TYPE_CSV;
-        String userDescription = "Test case description";
-        String location = Constants.DATA_LOCATION_LOCAL;
 
         // Step 2: App creates DataEntity and populates it with form data
-        DataEntity ANDData = factory.createDataObject(location);
-        ANDData.setDescription(userDescription);
-        ANDData.setFiletype(FILE_TYPE);
-        ANDData.setInputNodesCount(INPUT_NODES);
-        ANDData.setOutputNodesCount(OUTPUT_NODES);
+        DataEntity ANDData = factory.createDataObject(Constants.DATA_LOCATION_LOCAL);
+        ANDData.setDescription("Test case description");
+        ANDData.setFiletype(Constants.DATA_TYPE_CSV);
+        ANDData.setInputNodesCount(new Integer(2));
+        ANDData.setOutputNodesCount(new Integer(1));
         ANDData.setLocation(Constants.DATA_LOCATION_LOCAL);
-
 
         // Step 3: Save data entity to DB, id will be used as file ID
         DataEntity returnedData = dataService.saveData(ANDData);
         Integer id = returnedData.getId();
 
         // Step 4: Save CSV file with DataEntity id as file name
-        //saveToDisk(csv, "src/main/resources/training-data/" + id.toString() + FILE_TYPE);
+        //saveToDisk(csv, "src/main/resources/training-data/" + id.toString() + Constants.DATA_TYPE_CSV);
 
         // Step 5: Load CSV data into memory
 		log.info("Loading data object with id " + id.toString());
@@ -126,16 +120,16 @@ public class UserLoader implements ApplicationListener<ContextRefreshedEvent>  {
         int inputNodes = loadedDataEntity.getInputNodesCount();
         int outputNodes = loadedDataEntity.getOutputNodesCount();
 
-		// Step 6: Network is initialised with extracted data metadata
-        Network nn = factory.createModel("JEFF");
+		// Step 6: NNetwork is initialised with extracted data metadata
+        NNetwork nn = factory.createModel("JEFF");
         nn.load(data_in, data_out);
         nn.construct(inputNodes, outputNodes);
 
-        // Step: Network info is saved in DB
+        // Step: NNetwork info is saved in DB
         PredictionEntity ANDModel = new PredictionEntity();
         ANDModel.setCreatedBy(admin);
         ANDModel.setDescription("Logical AND of two inputs");
-        ANDModel.setEndpointUri("/and");
+        ANDModel.setEndpointUri(Constants.PREDICTION_ENDPOINT_PREFIX);
         ANDModel.setName("Logical AND");
         ANDModel.setStatus(Constants.MODEL_STATUS_ONLINE);
         ANDModel.setModelLocation("/models/1.ser");
@@ -144,7 +138,7 @@ public class UserLoader implements ApplicationListener<ContextRefreshedEvent>  {
         Integer returnedModelId = returnedPredictionEntity.getId();
 
 
-		// Step 4: Network learns data
+		// Step 4: NNetwork learns data
         nn.learn();
 
 		// Step 5: Ask network
@@ -153,8 +147,8 @@ public class UserLoader implements ApplicationListener<ContextRefreshedEvent>  {
         System.out.println("Answer is : " + output[0]);
 
 
-        fileService.saveNetworkFile(returnedModelId, nn);
-        Network fromDiskNN = fileService.readNetworkFile(returnedModelId);
+        fileService.saveNNetworkFile(returnedModelId, nn);
+        NNetwork fromDiskNN = fileService.readNNetworkFile(returnedModelId);
 
         // Step 5: Ask network read from disk:
         output = fromDiskNN.ask(input);

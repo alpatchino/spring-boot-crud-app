@@ -10,7 +10,7 @@ public interface UserService {
 	
 	User getUserByUsername(String username);
 	
-	User getUserByApiKey(String apiKey);
+	User getUserByAccessKey(String accessKey);
 
 	User saveUser(User user);
 

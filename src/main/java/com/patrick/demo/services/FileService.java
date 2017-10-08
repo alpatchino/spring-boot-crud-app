@@ -1,8 +1,8 @@
 package com.patrick.demo.services;
 
-import com.patrick.demo.networks.Network;
-import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Service;
+import com.patrick.demo.networks.NNetwork;
+
+import java.io.File;
 
 
 /**
@@ -10,7 +10,35 @@ import org.springframework.stereotype.Service;
  */
 public interface FileService {
 
-    void saveNetworkFile(Integer id, Network network);
+    // TODO: This should be generic file saver and not tied to NNetwork entity
 
-    Network readNetworkFile(Integer id);
+    /**
+     * Saves a NNetwork file
+     * @param id
+     * @param NNetwork
+     */
+    void saveNNetworkFile(Integer id, NNetwork NNetwork);
+
+    /**
+     * Reads a NNetwork file from local storage
+     * @param id
+     * @return NNetwork
+     */
+    NNetwork readNNetworkFile(Integer id);
+
+    /**
+     * Saves a specific data file to local storage
+     *
+     * @param id
+     * @param file
+     */
+    void saveDataFile(Integer id, File file);
+
+    /**
+     * Reads a data file from local storage
+     *
+     * @param id fileId
+     * @return File
+     */
+    File readDataFile(Integer id);
 }

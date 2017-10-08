@@ -48,7 +48,7 @@ public class UserServiceTest {
 
     @Test
     public void testGetUserByApiKey() throws Exception {
-        User user = userService.getUserByApiKey(apiKey);
+        User user = userService.getUserByAccessKey(apiKey);
         assertEquals(user.getUsername(), "admin");
     }
 

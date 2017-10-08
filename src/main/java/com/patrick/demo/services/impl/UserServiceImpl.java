@@ -33,8 +33,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User getUserByApiKey(String apiKey) {
-		return userRepository.findByApiKey(apiKey);
+	public User getUserByAccessKey(String accessKey) {
+		return userRepository.findByAccessKey(accessKey);
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
 	public User getAuthenticatedUser(String username, String apiKey) throws Exception {
 
 		if(username.isEmpty() || apiKey.isEmpty()) throw new Exception("Invalid username and/or API Key");
-		User user = userRepository.findByApiKey(apiKey);
+		User user = userRepository.findByAccessKey(apiKey);
 		if(username != user.getUsername()) throw new Exception("Invalid username and/or API Key");
 		return user;
 

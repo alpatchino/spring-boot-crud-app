@@ -19,18 +19,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
 
+    public static final Logger logger = LoggerFactory.getLogger(UserController.class);
+
     private UserService userService;
 
     @Autowired
     public void setUserService(UserService userService){ this.userService = userService; }
 
-    public static final Logger logger = LoggerFactory.getLogger(UserController.class);
-
-    /**
-     *
-     *      USER MAPPINGS: GetAllUsers, CreateUser, GetUser
-     *
-     */
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public Iterable<User> getAllUsers() {
         logger.info("Retrieving all users...");

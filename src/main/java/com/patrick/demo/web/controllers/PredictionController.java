@@ -7,7 +7,7 @@ import com.patrick.demo.web.requests.PredictionRequest;
 import com.patrick.demo.web.responses.PredictionResponse;
 import com.patrick.demo.entity.PredictionEntity;
 
-import com.patrick.demo.networks.Network;
+import com.patrick.demo.networks.NNetwork;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,16 +25,18 @@ import java.util.*;
 @RequestMapping(value = "/m", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PredictionController {
 
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private ModelService modelService;
-    @Autowired
-    private FileService fileService;
-    @Autowired
-    private AuthenticatorService authenticatorService;
-
     public static final Logger logger = LoggerFactory.getLogger(PredictionController.class);
+
+    private final ModelService modelService;
+    private final FileService fileService;
+    private final AuthenticatorService authenticatorService;
+
+    @Autowired
+    public PredictionController(FileService fileService, ModelService modelService, AuthenticatorService authenticatorService) {
+        this.fileService = fileService;
+        this.modelService = modelService;
+        this.authenticatorService = authenticatorService;
+    }
 
 
     @RequestMapping(value = "/{id}", method = RequestMethod.POST)
@@ -43,9 +45,9 @@ public class PredictionController {
         // Authenticate user
         User user = authenticatorService.getAuthenticatedUser(request.getUsername(), request.getAccessKey());
 
-        // Get PredictionEntity and its related Network from disk
+        // Get PredictionEntity and its related NNetwork from disk
         PredictionEntity prediction = modelService.getModelById(id);
-        Network nn = fileService.readNetworkFile(prediction.getId());
+        NNetwork nn = fileService.readNNetworkFile(prediction.getId());
 
         if(nn.getStatus() != Constants.MODEL_STATUS_ONLINE)
             throw new Exception("Model is not ready to be queried. STATUS is " + nn.getStatus());
